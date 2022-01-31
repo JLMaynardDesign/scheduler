@@ -7,13 +7,18 @@ export default function useVisualMode(initial) {
   function transition(newMode, replace = false) {
 
     setMode(newMode);
-    let newHistory = [...history, mode];
+    
 
     if (replace) {
-      setHistory(newHistory.slice(0,-1));
+      let newHistory = [...history];
+      setHistory(newHistory.splice(newHistory.length-1, 1, newMode));
     } else {
+      let newHistory = [...history, mode];
       setHistory(newHistory);
     }
+
+    console.log("his",history);
+    
   };
 
   function back() {

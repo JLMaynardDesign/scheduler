@@ -53,7 +53,8 @@ export default function Application(props) {
       .put(`/api/appointments/${id}`, appointment)
       .then((response) => {
         setState({ ...state, appointments });
-      });
+      })
+      .catch((error)=>{console.log(error)}) 
   }
 
   function cancelInterview(id) {
@@ -67,7 +68,8 @@ export default function Application(props) {
         [id]: appointment,
       };
       setState({ ...state, appointments });
-    });
+    })
+    .catch((error)=>{console.log(error)}) 
   }
 
   const calendar = dailyAppointments.map((appointment) => {
@@ -78,7 +80,7 @@ export default function Application(props) {
         key={appointment.id}
         id={appointment.id}
         time={appointment.time}
-        interview={interview}
+        interview={getInterview(state, appointment.interview)}
         interviewers={dailyInterviewers}
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
