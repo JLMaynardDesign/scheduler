@@ -1,33 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 
 export default function useVisualMode(initial) {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]);
+  
+  useEffect(() => {
+    // set mode to the last item of history array when history array updates
+    setMode(history.slice(-1)[0]);
+  }, [history]);
 
-  function transition(newMode, replace = false) {
-
+  const transition = (newMode, replace = false) => {
     setMode(newMode);
     
-
+    // for situations where 2 transitions are required & back action returns to initial state
     if (replace) {
-      let newHistory = [...history];
-      setHistory(newHistory.splice(newHistory.length-1, 1, newMode));
-    } else {
-      let newHistory = [...history, mode];
-      setHistory(newHistory);
+      return setHistory((prevHistory) => ([ ...prevHistory.slice(0, -1), newMode]));
     }
     
+    setHistory((prevHistory) => ([...prevHistory, newMode]));
   };
 
-  function back() {
-
-    if (history.length >= 1) { 
-      let newHistory = [...history];
-      newHistory = newHistory.slice(0,-1);
-      setHistory(newHistory);
-      setMode(history[history.length-1]);
+  const back = () => {
+    // do not allow user to go back past initial mode
+    if (history.length === 1) {
+      return;
     }
-  }
 
-  return { mode, transition , back};
-} 
+    const newHistory = [...history];
+    newHistory.pop();
+    setHistory(newHistory);
+  };
+
+  return{ mode, transition, back, history };
+};

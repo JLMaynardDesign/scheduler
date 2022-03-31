@@ -2,87 +2,82 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function useApplicationData() {
-
   const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: {}
+    interviewers: {},
   });
 
-  const setDay = day => setState({ ...state, day });
+  const setDay = (day) => setState({ ...state, day });
 
   useEffect(() => {
-
     Promise.all([
-      axios.get('/api/days'),
-      axios.get('/api/appointments'),
-      axios.get('/api/interviewers')
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
     ]).then((all) => {
-      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
+      setState((prev) => ({
+        ...prev,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data,
+      }));
     });
   }, []);
 
-  const getWeekdayNum = (id) => {
-    if (id < 6) {
-      return 0;
-    } else if (id < 11){
-      return 1;
-    } else if (id < 16){
-      return 2;
-    } else if (id < 21){
-      return 3;
-    } else {
-      return 4;
+  // 2nd parameter indicates whether the appointment change was a cancellation or not
+  function updateSpots(apptID, cancelAppt = false) {
+    // get day object by appointment ID
+    const selectedDay = state.days.filter(day => day.appointments.includes(apptID))[0];
+    let count = selectedDay.spots;
+    
+    // if appt slot wasn't empty && if cancelAppt = false, action performed was an edit - no count update required
+    if (state.appointments[apptID].interview !== null && !cancelAppt) {
+      return state.days;
     }
+
+    // adjust count depending on whether appt was cancelled or added
+    cancelAppt ? count++ : count--;
+
+    // copy days array, change spots count, return new days array
+    const newDays = [ ...state.days ];
+    newDays.find(newDay => newDay === selectedDay).spots = count;
+    return newDays;
   }
-
-
+  
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      interview: { ...interview },
     };
+
     const appointments = {
       ...state.appointments,
-      [id]: appointment
+      [id]: appointment,
     };
+
+    const days = updateSpots(id); 
+
     return axios
       .put(`/api/appointments/${id}`, appointment)
-      .then((response) => {
-        setState({ ...state, appointments });
-      })
       .then(() => {
-
-        if (!state.appointments[id].interview) {
-          let daysCopy = [...state.days]
-          daysCopy[getWeekdayNum(id)].spots--;
-          setState((prev) => ({ ...prev, days: daysCopy }))
-        }
-  })
-}
-
-  function cancelInterview(id) {
-     
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then((response) => {
-        const appointment = {
-          ...state.appointments[id],
-          interview: null
-        }
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
-        setState({ ...state, appointments });
-      })
-      .then(() => {
-        let daysCopy = [...state.days]
-        daysCopy[getWeekdayNum(id)].spots++;
-        setState((prev) => ({ ...prev, days: daysCopy }))
-      })
+        setState((prevState) => ({ ...prevState, appointments, days }));
+      });
   }
 
+  function cancelInterview(id) {
+    let newApptObj = { ...state.appointments[id], interview: null };
+    const appointments = { ...state.appointments, [id]: newApptObj };
+    const days = updateSpots(id, true); // 2nd param = cancelAppt
+
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then(() => {
+        setState((prevState) => ({ ...prevState, appointments, days }));
+      });
+  }
+
+
   return { state, setDay, bookInterview, cancelInterview };
-} 
+}
