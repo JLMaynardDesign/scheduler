@@ -25,6 +25,11 @@ export default function Form(props) {
       return;
     }
 
+     // if (interviewer === null) {
+    //   return setError("An interviewer must be selected");
+    // }
+    // setError("");
+    
     onSave(student, interviewer);
   }
 
