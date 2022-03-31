@@ -16,8 +16,6 @@ export default function useVisualMode(initial) {
       let newHistory = [...history, mode];
       setHistory(newHistory);
     }
-
-    console.log("his",history);
     
   };
 
