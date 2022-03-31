@@ -1,8 +1,17 @@
 # Interview Scheduler
 
 ## Setup
+## dependencies
+- axios
+- classnames 
+- normalize.css
+- react
+- react-dom
+- react-scripts
 
 Install dependencies with `npm install`.
+
+Clone Scheduler API from [here](https://github.com/JLMaynardDesign/scheduler-api) and follow the instructions provided in the README.
 
 ## Running Webpack Development Server
 
@@ -20,4 +29,4 @@ npm test
 
 ```sh
 npm run storybook
-```
+``` 
