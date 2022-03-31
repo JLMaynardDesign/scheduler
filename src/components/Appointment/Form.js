@@ -4,20 +4,29 @@ import React, { useState } from 'react';
 
 export default function Form(props) {
 
-  const {student:studentName, interviewer:interviewerId, interviewers, onSave, onCancel} = props;
+  const {name, interviewer:interviewerId, interviewers, onSave, onCancel} = props;
 
-  const [student, setStudent] = useState(studentName || "");
+  const [student, setStudent] = useState(name || "");
   const [interviewer, setInterviewer] = useState(interviewerId || null);
 
   const reset = () => {
     setStudent("");
-    setInterviewer("");
+    setInterviewer("null");
   };
 
   const cancel = () => {
     reset();
     onCancel();
   };
+
+  function validate() {
+    if (student === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+
+    onSave(student, interviewer);
+  }
 
   return (
 
@@ -31,15 +40,17 @@ export default function Form(props) {
             placeholder="Enter Student Name"
             value={student}
             onChange={event => setStudent(event.target.value)}
+            data-testid="student-name-input"
           />
         </form>
+        <section className="appointment__validation">{error}</section>
         <InterviewerList value={interviewer} interviewers={interviewers} onChange={setInterviewer}
         />
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel}>Cancel</Button>
-          <Button confirm onClick={() =>onSave(student, interviewer)}>Save</Button>
+           <Button confirm onClick={() =>validate()}>Save</Button> <Button confirm onClick={() =>validate()}>Save</Button>
         </section>
       </section>
     </main>

@@ -1,5 +1,4 @@
 export function getAppointmentsForDay(state, day) {
-
   let filteredWeekdays = state.days.find(weekday => weekday.name === day)
 
   if (!filteredWeekdays) return [];

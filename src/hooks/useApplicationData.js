@@ -26,11 +26,11 @@ export default function useApplicationData() {
   const getWeekdayNum = (id) => {
     if (id < 6) {
       return 0;
-    } else if(id < 11){
+    } else if (id < 11){
       return 1;
-    } else if(id < 16){
+    } else if (id < 16){
       return 2;
-    } else if(id < 21){
+    } else if (id < 21){
       return 3;
     } else {
       return 4;
@@ -51,13 +51,19 @@ export default function useApplicationData() {
       .put(`/api/appointments/${id}`, appointment)
       .then((response) => {
         setState({ ...state, appointments });
-        let daysCopy = [...state.days]
-        daysCopy[getWeekdayNum(id)].spots--;
-        setState((prev) => ({...prev, days: daysCopy}))
       })
-  }
+      .then(() => {
+
+        if (!state.appointments[id].interview) {
+          let daysCopy = [...state.days]
+          daysCopy[getWeekdayNum(id)].spots--;
+          setState((prev) => ({ ...prev, days: daysCopy }))
+        }
+  })
+}
 
   function cancelInterview(id) {
+     
     return axios
       .delete(`/api/appointments/${id}`)
       .then((response) => {
@@ -70,11 +76,13 @@ export default function useApplicationData() {
           [id]: appointment
         };
         setState({ ...state, appointments });
+      })
+      .then(() => {
         let daysCopy = [...state.days]
         daysCopy[getWeekdayNum(id)].spots++;
-        setState((prev) => ({...prev, days: daysCopy}))
+        setState((prev) => ({ ...prev, days: daysCopy }))
       })
   }
 
-  return { state, setDay, bookInterview, cancelInterview};
+  return { state, setDay, bookInterview, cancelInterview };
 } 

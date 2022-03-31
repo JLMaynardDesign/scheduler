@@ -1,9 +1,9 @@
 import React from "react";
 import "components/InterviewerList.scss";
 import InterviewerListItem from "./InterviewerListItem";
-import classNames from "classnames";
+import PropTypes from 'prop-types';
 
-export default function InterviewerList(props) {
+function InterviewList(props) {
   const { interviewers, onChange, value } = props;
 
   const rollCall = interviewers.map((person) => {
@@ -25,4 +25,10 @@ export default function InterviewerList(props) {
       <ul className="interviewers__list">{rollCall}</ul>
     </section>
   );
-}
+};
+
+InterviewerList.propTypes = {
+  interviewers: PropTypes.array.isRequired
+};
+
+export default InterviewerList; 
