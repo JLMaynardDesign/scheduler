@@ -25,7 +25,7 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  function save(name, interviewer) {
+  function save(name, interviewer) { //interviewer saved on edit and create
     const interview = {
       student: name,
       interviewer,
@@ -86,7 +86,7 @@ export default function Appointment(props) {
       {mode === DELETING && <Status message="now deleting" />}
       {mode === CONFIRM && (
         <Confirm
-          message="Are you sure?"
+          message="Please confirm you want to delete this appointment!"
           onCancel={back}
           onConfirm={cancelInterview}
         />

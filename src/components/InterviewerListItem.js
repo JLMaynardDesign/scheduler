@@ -6,6 +6,7 @@ export default function InterviewerListItem(props) {
 
   const { name, selected, avatar, setInterviewer } = props;
 
+  //display name and icon, if true
   const buttonClass = classNames("interviewers__item", {
     "interviewers__item--selected": selected
   });

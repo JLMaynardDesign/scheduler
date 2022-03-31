@@ -10,17 +10,19 @@ export default function Form(props) {
   const [interviewer, setInterviewer] = useState(interviewerId || null);
   const [error, setError] = useState("");
 
-
+  //fields reset to blank
   const reset = () => {
     setStudent("");
     setInterviewer("null");
   };
 
+  //cancelling booking
   const cancel = () => {
     reset();
     onCancel();
   };
 
+  //error shown when student is blank, but not blank for interviewer
   function validate() {
     if (student === "") {
       setError("Student name cannot be blank");
@@ -29,7 +31,7 @@ export default function Form(props) {
 
      // if (interviewer === null) {
     //   return setError("An interviewer must be selected");
-    // }
+    // } //expect this to work, but failure in test 
     setError("");
     onSave(student, interviewer);
   }

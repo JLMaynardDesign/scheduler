@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 function InterviewList(props) {
   const { interviewers, onChange, value } = props;
 
-  const rollCall = interviewers.map((person) => {
+  const interviewerFaces = interviewers.map((person) => {
     return (
       <InterviewerListItem
         key={person.id}
@@ -22,7 +22,7 @@ function InterviewList(props) {
   return (
     <section className="interviewers">
       <h4 className="interviewers__header text--light">Interviewer</h4>
-      <ul className="interviewers__list">{rollCall}</ul>
+      <ul className="interviewers__list">{interviewFaces}</ul>
     </section>
   );
 };
