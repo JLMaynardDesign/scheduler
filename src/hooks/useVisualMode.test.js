@@ -2,14 +2,13 @@ import { renderHook, act } from "@testing-library/react-hooks";
 
 import useVisualMode from "hooks/useVisualMode";
 
-
 const FIRST = "FIRST";
 const SECOND = "SECOND";
 const THIRD = "THIRD";
 
 test("useVisualMode should initialize with default value", () => {
   const { result } = renderHook(() => useVisualMode(FIRST));
-
+  // Is current a keyword? Where does it come from?
   expect(result.current.mode).toBe(FIRST);
 });
 
@@ -55,4 +54,4 @@ test("useVisualMode should replace the current mode", () => {
 
   act(() => result.current.back());
   expect(result.current.mode).toBe(FIRST);
-}); 
+});

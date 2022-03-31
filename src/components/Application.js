@@ -1,13 +1,11 @@
 import React from "react";
 import "components/Application.scss";
-import DayList from "./DayList";
-import Appointment from "components/Appointment";
-import {
-  getAppointmentsForDay,
-  getInterview,
-  getInterviewersForDay,
-} from "helpers/selectors";
-import useApplicationData from "hooks/useApplicationData"; 
+import Button from './Button';
+import DayList from './DayList';
+import Appointment from './Appointment';
+import useApplicationData from '../hooks/useApplicationData'
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from 'helpers/selectors';
+
 
 export default function Application(props) {
   const {
@@ -17,18 +15,16 @@ export default function Application(props) {
     cancelInterview
   } = useApplicationData();
 
-  let dailyAppointments = [];
-  dailyAppointments = getAppointmentsForDay(state, state.day);
-  let dailyInterviewers = getInterviewersForDay(state, state.day);
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
 
-  const calendar = dailyAppointments.map((appointment) => {
-
+  const appointmentList = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
     return (
       <Appointment
         key={appointment.id}
-        id={appointment.id}
-        time={appointment.time}
-        interview={getInterview(state, appointment.interview)}
+        {...appointment}
+        interview={interview}
         interviewers={dailyInterviewers}
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
@@ -39,7 +35,6 @@ export default function Application(props) {
   return (
     <main className="layout">
       <section className="sidebar">
-        {/* Replace this with the sidebar elements during the "Project Setup & Familiarity" activity. */}
         <img
           className="sidebar--centered"
           src="images/logo.png"
@@ -47,7 +42,11 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList days={state.days} value={state.day} onChange={setDay} />
+          <DayList
+            days={state.days}
+            value={state.day}
+            onChange={setDay}
+          />
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
@@ -56,9 +55,9 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
-        {calendar}
+        {appointmentList}
         <Appointment key="last" time="5pm" />
+        <Button>Default</Button>
       </section>
     </main>
   );
