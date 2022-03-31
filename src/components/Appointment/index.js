@@ -30,7 +30,8 @@ export default function Appointment(props) {
       student: name,
       interviewer,
     };
-
+      
+    if (interview) {
       transition(SAVING);
       props.bookInterview(props.id, interview)
       .then(() => transition(SHOW))
@@ -38,6 +39,9 @@ export default function Appointment(props) {
         console.log("error", error)
         transition(ERROR_SAVE, true)
       })
+    } else { //no interviewer
+    transition(ERROR_SAVE, true)
+    }
   }
 
   function cancelInterview() {
