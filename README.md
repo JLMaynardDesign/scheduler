@@ -32,3 +32,7 @@ npm run storybook
 ``` 
 
 ## what it looks like now
+
+![screenshot 1](<https://github.com/JLMaynardDesign/scheduler/blob/master/docs/Screen%20Shot%202022-03-31%20at%207.46.20%20PM.png>)
+![screenshot 2](<https://github.com/JLMaynardDesign/scheduler/blob/master/docs/Screen%20Shot%202022-03-31%20at%207.46.30%20PM.png>)
+![screenshot 3](<https://github.com/JLMaynardDesign/scheduler/blob/master/docs/Screen%20Shot%202022-03-31%20at%207.46.36%20PM.png>)
